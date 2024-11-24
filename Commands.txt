@@ -1,0 +1,17 @@
+The current configuration permits building, running and debugging.
+
+Using CMAKE and VSCode:
+
+Selecting build target:
+Shift + Cmd + P : "CMAKE: Select configure preset"
+
+Choose either debug or release
+
+to build:
+F7 or Shift + Cmd + P : "CMAKE: Build"
+
+to debug:
+Shift + F5 or Shift + Cmd + P : "CMAKE: Debug"
+
+to run (without debugging):
+Ctrl + F5 or Shift + Cmd + P : "CMAKE: Run without debugging"
