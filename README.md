@@ -23,7 +23,7 @@ After configuring, build using the corresponding preset:
 cmake --build --preset <build preset name>  
 ```  
 
-The available configure presets corresponding to your configure preset are:
+The available build presets corresponding to your configure preset are:
 - build-debug (if you used the debug preset)
 - build-release (if you used the release preset)
 
