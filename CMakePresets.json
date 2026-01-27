@@ -1,24 +1,14 @@
 {
     "version": 3,
-    "cmakeMinimumRequired": {
-      "major": 3,
-      "minor": 10
-    },
     "configurePresets": [
       {
         "name": "default",
-        "description": "Base configuration for all builds",
         "hidden": true,
         "generator": "Ninja",
-        "binaryDir": "${sourceDir}/build/${presetName}",
-        "cacheVariables": {
-          "CMAKE_CXX_STANDARD": "17",
-          "CMAKE_CXX_STANDARD_REQUIRED": "ON"
-        }
+        "binaryDir": "${sourceDir}/build/${presetName}"
       },
       {
         "name": "debug",
-        "description": "Debug build with no optimizations",
         "inherits": "default",
         "cacheVariables": {
           "CMAKE_BUILD_TYPE": "Debug"
@@ -26,23 +16,19 @@
       },
       {
         "name": "release",
-        "description": "Release build with optimizations and LTO",
         "inherits": "default",
         "cacheVariables": {
-          "CMAKE_BUILD_TYPE": "Release",
-          "CMAKE_INTERPROCEDURAL_OPTIMIZATION": "ON"
+          "CMAKE_BUILD_TYPE": "Release"
         }
       }
     ],
     "buildPresets": [
       {
-        "name": "build-debug",
-        "description": "Build the Debug preset",
+        "name": "debug",
         "configurePreset": "debug"
       },
       {
-        "name": "build-release",
-        "description": "Build the Release preset",
+        "name": "release",
         "configurePreset": "release"
       }
     ]
