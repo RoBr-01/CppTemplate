@@ -13,13 +13,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_executable(${PROJECT_NAME})
 add_subdirectory(src)
 
-set_target_properties(${PROJECT_NAME} PROPERTIES
-    CXX_STANDARD 17
-    CXX_STANDARD_REQUIRED ON
-    CXX_EXTENSIONS OFF
-)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-target_link_libraries(${PROJECT_NAME} INTERFACE compile_options)
+target_link_libraries(${PROJECT_NAME} PRIVATE compile_options)
 
 option(${PROJECT_NAME}_ENABLE_TESTING "Enable building of tests" OFF)
 option(${PROJECT_NAME}_ENABLE_BENCHMARK "Enable building of benchmarks" OFF)
@@ -39,9 +37,4 @@ endif()
 if(${PROJECT_NAME}_ENABLE_EXAMPLES)
     message(STATUS "Building Examples")
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/examples)
-endif()
-
-if(${PROJECT_NAME}_ENABLE_DEV)
-    message(STATUS "Building Dev")
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/dev)
 endif()
