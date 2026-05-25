@@ -1,35 +1,115 @@
 {
     "version": 3,
     "configurePresets": [
-      {
-        "name": "default",
-        "hidden": true,
-        "generator": "Ninja",
-        "binaryDir": "${sourceDir}/build/${presetName}"
-      },
-      {
-        "name": "debug",
-        "inherits": "default",
-        "cacheVariables": {
-          "CMAKE_BUILD_TYPE": "Debug"
+        {
+            "name": "base",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}"
+        },
+        {
+            "name": "debug",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "release",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "test-debug",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "Template_ENABLE_TESTING": "ON"
+            }
+        },
+        {
+            "name": "test-release",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "Template_ENABLE_TESTING": "ON"
+            }
+        },
+        {
+            "name": "bench-debug",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "Template_ENABLE_BENCHMARK": "ON"
+            }
+        },
+        {
+            "name": "bench-release",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "Template_ENABLE_BENCHMARK": "ON"
+            }
+        },
+        {
+            "name": "examples-debug",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "Template_ENABLE_EXAMPLES": "ON"
+            }
+        },
+        {
+            "name": "examples-release",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "Template_ENABLE_EXAMPLES": "ON"
+            }
         }
-      },
-      {
-        "name": "release",
-        "inherits": "default",
-        "cacheVariables": {
-          "CMAKE_BUILD_TYPE": "Release"
-        }
-      }
     ],
     "buildPresets": [
-      {
-        "name": "debug",
-        "configurePreset": "debug"
-      },
-      {
-        "name": "release",
-        "configurePreset": "release"
-      }
+        {
+            "name": "debug",
+            "configurePreset": "debug",
+            "jobs": 0
+        },
+        {
+            "name": "release",
+            "configurePreset": "release",
+            "jobs": 0
+        },
+        {
+            "name": "test-debug",
+            "configurePreset": "test-debug",
+            "jobs": 0
+        },
+        {
+            "name": "test-release",
+            "configurePreset": "test-release",
+            "jobs": 0
+        },
+        {
+            "name": "bench-debug",
+            "configurePreset": "bench-debug",
+            "jobs": 0
+        },
+        {
+            "name": "bench-release",
+            "configurePreset": "bench-release",
+            "jobs": 0
+        },
+        {
+            "name": "examples-debug",
+            "configurePreset": "examples-debug",
+            "jobs": 0
+        },
+        {
+            "name": "examples-release",
+            "configurePreset": "examples-release",
+            "jobs": 0
+        }
     ]
-  }
+}

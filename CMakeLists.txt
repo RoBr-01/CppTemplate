@@ -1,90 +1,47 @@
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 4.3.2)
 
-# ---- ccache (optional) ----
-find_program(CCACHE_PROGRAM ccache)
-if(CCACHE_PROGRAM)
-    message(STATUS "ccache found!")
-    set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
-    set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
-endif()
+project(Template VERSION 0.0.1)
 
-project(CPPTemplate VERSION 0.0.1 LANGUAGES CXX)
+include(CTest)
+include(cmake/Checks.cmake)
+include(cmake/CompileOptions.cmake)
 
-message(STATUS "Compiler ID: ${CMAKE_CXX_COMPILER_ID}")
-message(STATUS "Compiler Version: ${CMAKE_CXX_COMPILER_VERSION}")
-message(STATUS "Compiler Path: ${CMAKE_CXX_COMPILER}")
+CHECK_GIT_SUBMODULES()
 
-include(cmake/CPM.cmake)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# ---- language ----
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+add_executable(${PROJECT_NAME})
+add_subdirectory(src)
 
-# ---- preset / build-type naming ----
-if(DEFINED ENV{CMAKE_PRESET_NAME})
-    set(PRESET_NAME $ENV{CMAKE_PRESET_NAME})
-elseif(DEFINED CMAKE_BUILD_TYPE)
-    set(PRESET_NAME ${CMAKE_BUILD_TYPE})
-else()
-    set(PRESET_NAME default)
-endif()
-
-set(TARGET_NAME ${PROJECT_NAME}_${PRESET_NAME})
-
-# ---- sources & target ----
-file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
-add_executable(${TARGET_NAME} ${SOURCES})
-
-target_include_directories(${TARGET_NAME}
-    PRIVATE
-    inc
-    lib
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF
 )
 
-# ---- warnings (Debug only) ----
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    message(STATUS "Enabling strong warnings + sanitizers")
+target_link_libraries(${PROJECT_NAME} INTERFACE compile_options)
 
-    target_compile_options(${TARGET_NAME} PRIVATE
-        -O0 -g
-        -Wall -Wextra -Wpedantic
-        -Wshadow -Wconversion -Wdouble-promotion
-        -Wnon-virtual-dtor -Wold-style-cast
-        -Wcast-align -Woverloaded-virtual
-        -Wnull-dereference -Wmisleading-indentation
-        -Wfloat-equal -Wswitch-enum -Wundef
-        -Wformat=2 -Wduplicated-cond
-        -Wlogical-op -Warray-bounds
-    )
+option(${PROJECT_NAME}_ENABLE_TESTING "Enable building of tests" OFF)
+option(${PROJECT_NAME}_ENABLE_BENCHMARK "Enable building of benchmarks" OFF)
+option(${PROJECT_NAME}_ENABLE_EXAMPLES "Enable building of examples" OFF)
 
-    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
-        message(STATUS "Clang|GNU detected")
-
-        target_compile_options(${TARGET_NAME} PRIVATE
-            -fsanitize=address,undefined,bounds,pointer-compare,pointer-subtract
-            -fno-omit-frame-pointer
-            -fsanitize-recover=undefined
-        )
-        target_link_options(${TARGET_NAME}  PRIVATE
-            -fsanitize=address,undefined,bounds,pointer-compare,pointer-subtract
-            -fno-omit-frame-pointer
-            -fsanitize-recover=undefined
-        )
-    endif()
+if(${PROJECT_NAME}_ENABLE_TESTING)
+    message(STATUS "Building Unit Tests")
+    enable_testing()
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/test)
 endif()
 
-# ---- aggressive Release tuning ----
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    message(STATUS "Enabling optimisations")
-    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
-        target_compile_options(${TARGET_NAME} PRIVATE
-            -O3
-            -flto
-            -fno-rtti
-            -fno-exceptions
-            -ffast-math
-            -DNDEBUG
-        )
-    endif()
+if(${PROJECT_NAME}_ENABLE_BENCHMARK)
+    message(STATUS "Building Benchmarks")
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/bench)
+endif()
+
+if(${PROJECT_NAME}_ENABLE_EXAMPLES)
+    message(STATUS "Building Examples")
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/examples)
+endif()
+
+if(${PROJECT_NAME}_ENABLE_DEV)
+    message(STATUS "Building Dev")
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/dev)
 endif()
