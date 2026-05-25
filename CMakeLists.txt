@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.3.2)
+cmake_minimum_required(VERSION 3.25...4.3.2)
 
 project(Template VERSION 0.0.1)
 
